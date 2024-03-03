@@ -118,20 +118,40 @@ except Exception as e:
     print(e)
 """
 
+# ...
 def prettyRedshiftProps(props):
+    """
+    Formats and displays selected properties of an AWS Redshift cluster in a Pandas DataFrame.
+
+    Args:
+        props (dict): A dictionary containing properties of an AWS Redshift cluster.
+
+    Returns:
+        DataFrame: A pandas DataFrame with keys and values of selected Redshift properties.
+    """
     pd.set_option('display.max_colwidth', 1)
     keysToShow = ["ClusterIdentifier", "NodeType", "ClusterStatus", "MasterUsername", "DBName", "Endpoint", "NumberOfNodes", 'VpcId']
     x = [(k, v) for k,v in props.items() if k in keysToShow]
     return pd.DataFrame(data=x, columns=["Key", "Value"])
 
-myClusterProps = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
-prettyRedshiftProps(myClusterProps)
-print(prettyRedshiftProps(myClusterProps))
+# interactive Python interpreter session
+if __name__ == "__main__":
+    """
+    The main function of the script.
+    This function reads config file, sets up AWS resources using boto3, creates an IAM role, 
+    and sets up an AWS Redshift cluster. Finally, it prints out selected properties of the newly 
+    created Redshift cluster and comments out the code to delete the cluster.
+    """
+    # ...
+
+    myClusterProps = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
+    prettyRedshiftProps(myClusterProps)
+    print(prettyRedshiftProps(myClusterProps))
 
 
-"""
-#### CAREFUL!!
-#-- Uncomment & run to delete the created resources
-redshift.delete_cluster( ClusterIdentifier=DWH_CLUSTER_IDENTIFIER,  SkipFinalClusterSnapshot=True)
-#### CAREFUL!!
-"""
+    """
+    #### CAREFUL!!
+    #-- Uncomment & run to delete the created resources
+    redshift.delete_cluster( ClusterIdentifier=DWH_CLUSTER_IDENTIFIER,  SkipFinalClusterSnapshot=True)
+    #### CAREFUL!!
+    """
